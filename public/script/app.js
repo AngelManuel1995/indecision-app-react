@@ -1,3 +1,18 @@
-let template = React.createElement('h1', null, 'Hi I am a text')
+'use strict';
 
-ReactDOM.render(template, document.getElementById('app'))
+var template = React.createElement(
+    'div',
+    null,
+    React.createElement(
+        'h1',
+        null,
+        'Indecision app'
+    ),
+    React.createElement(
+        'p',
+        null,
+        'Hi I am basic template, and I changed'
+    )
+);
+
+ReactDOM.render(template, document.getElementById('app'));
