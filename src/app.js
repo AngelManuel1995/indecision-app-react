@@ -1,7 +1,4 @@
-const user = {
-    name:'Angel Manuel Góez Giraldo',
-    age:24,
-    location:'Medellín - Colombia',
+const app = {
     options:['item1', 'item2']
 }
 
@@ -19,27 +16,27 @@ let style = {
     padding:'10px',
     backgroundColor:'#fff',
     display: 'inline-block',
-    margin:'0px',
+    margin:'0px auto',
 }
 
 const onFormSubmit = (e) => {
     e.preventDefault()
     let option = e.target.elements.option.value
     if(option){
-        user.options.push(option)
+        app.options.push(option)
         e.target.elements.option.value = ''
         render()
     }
 }
 
 const onMakeDecision = () => {
-    let decision = Math.floor((Math.random() * user.options.length))
-    let todo = user.options[decision]
+    let decision = Math.floor((Math.random() * app.options.length))
+    let todo = app.options[decision]
     console.log(todo)
 }
 
 const removeAllItems = () => {
-    user.options = []
+    app.options = []
     render()
 }
 
@@ -49,11 +46,11 @@ const render = () => {
         <div style={style}>
             <h1>Indecision app</h1>
             <p>Hi I am basic template, and I changed</p>
-            <button disabled={user.options.length === 0} onClick={onMakeDecision}>WHAT SHOULD I DO?</button>
+            <button disabled={app.options.length === 0} onClick={onMakeDecision}>WHAT SHOULD I DO?</button>
             <button onClick={removeAllItems}>REMOVE ALL</button>
-            {(user.options.length > 0 ) ? <p>Here are your options: {user.options.length}</p> : <p>No options to show</p> }
+            {(app.options.length > 0 ) ? <p>Here are your options: {app.options.length}</p> : <p>No options to show</p> }
             <ol>
-                { user.options.map(option => (<li key={option}>{ option }</li>)) }
+                { app.options.map(option => (<li key={option}>{ option }</li>)) }
             </ol>
             <div>
                 <form onSubmit={onFormSubmit}>
@@ -61,9 +58,7 @@ const render = () => {
                     <input id="itemForm" name="option" type="text"/>
                     <button>ADD</button>
                 </form>
-                
             </div>
-            { getLocation(user) }
         </div>
     )
 

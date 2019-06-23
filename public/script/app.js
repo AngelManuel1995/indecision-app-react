@@ -1,9 +1,6 @@
 'use strict';
 
-var user = {
-    name: 'Angel Manuel Góez Giraldo',
-    age: 24,
-    location: 'Medellín - Colombia',
+var app = {
     options: ['item1', 'item2']
 };
 
@@ -28,27 +25,27 @@ var style = {
     padding: '10px',
     backgroundColor: '#fff',
     display: 'inline-block',
-    margin: '0px'
+    margin: '0px auto'
 };
 
 var onFormSubmit = function onFormSubmit(e) {
     e.preventDefault();
     var option = e.target.elements.option.value;
     if (option) {
-        user.options.push(option);
+        app.options.push(option);
         e.target.elements.option.value = '';
         render();
     }
 };
 
 var onMakeDecision = function onMakeDecision() {
-    var decision = Math.floor(Math.random() * user.options.length);
-    var todo = user.options[decision];
+    var decision = Math.floor(Math.random() * app.options.length);
+    var todo = app.options[decision];
     console.log(todo);
 };
 
 var removeAllItems = function removeAllItems() {
-    user.options = [];
+    app.options = [];
     render();
 };
 
@@ -69,7 +66,7 @@ var render = function render() {
         ),
         React.createElement(
             'button',
-            { disabled: user.options.length === 0, onClick: onMakeDecision },
+            { disabled: app.options.length === 0, onClick: onMakeDecision },
             'WHAT SHOULD I DO?'
         ),
         React.createElement(
@@ -77,11 +74,11 @@ var render = function render() {
             { onClick: removeAllItems },
             'REMOVE ALL'
         ),
-        user.options.length > 0 ? React.createElement(
+        app.options.length > 0 ? React.createElement(
             'p',
             null,
             'Here are your options: ',
-            user.options.length
+            app.options.length
         ) : React.createElement(
             'p',
             null,
@@ -90,7 +87,7 @@ var render = function render() {
         React.createElement(
             'ol',
             null,
-            user.options.map(function (option) {
+            app.options.map(function (option) {
                 return React.createElement(
                     'li',
                     { key: option },
@@ -116,8 +113,7 @@ var render = function render() {
                     'ADD'
                 )
             )
-        ),
-        getLocation(user)
+        )
     );
 
     ReactDOM.render(template, document.getElementById('app'));
