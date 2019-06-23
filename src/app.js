@@ -1,7 +1,8 @@
 const user = {
     name:'Angel Manuel Góez Giraldo',
     age:24,
-    location:'Medellín - Colombia'
+    location:'Medellín - Colombia',
+    options:['item1', 'item2']
 }
 
 const getLocation = ({location}) => {
@@ -20,68 +21,49 @@ let style = {
     display: 'inline-block',
     margin:'0px',
 }
-let buttonStyleAdd= {
-    backgroundColor:'green',
-    color:'#fff',
-    padding:'5px',
-    fontSize:'20px',
-    boxShadow:'1px 2px #ccc',
-    margin:'2px',
-}
-let buttonStyleMinus = {
-    backgroundColor:'crimson',
-    color:'#fff',
-    padding:'5px',
-    fontSize:'20px',
-    boxShadow:'1px 2px #ccc',
-    margin:'2px',
-}
-let buttonStyleRestart = {
-    backgroundColor:'blue',
-    color:'#fff',
-    padding:'5px',
-    fontSize:'20px',
-    boxShadow:'1px 2px #ccc',
-    margin:'2px',
+
+const onFormSubmit = (e) => {
+    e.preventDefault()
+    let option = e.target.elements.option.value
+    if(option){
+        user.options.push(option)
+        e.target.elements.option.value = ''
+        render()
+    }
 }
 
-let counter = 0
+const onMakeDecision = () => {
+    let decision = Math.floor((Math.random() * user.options.length))
+    let todo = user.options[decision]
+    console.log(todo)
+}
 
-const addOne = () => {
-    counter++
-    render()
-}
-const minusOne = () => {
-    counter--
-    render()
-}
-const reset = () => {
-    counter = 0
+const removeAllItems = () => {
+    user.options = []
     render()
 }
 
 const render = () => { 
 
     const template = (
-        <div>
-            <div style={style}>
-                <h1>Indecision app</h1>
-                <p>Hi I am basic template, and I changed</p>
-                <ol>
-                    <li>Item one</li>
-                    <li>Item two</li>
-                </ol>
-                { getLocation(user) }
+        <div style={style}>
+            <h1>Indecision app</h1>
+            <p>Hi I am basic template, and I changed</p>
+            <button disabled={user.options.length === 0} onClick={onMakeDecision}>WHAT SHOULD I DO?</button>
+            <button onClick={removeAllItems}>REMOVE ALL</button>
+            {(user.options.length > 0 ) ? <p>Here are your options: {user.options.length}</p> : <p>No options to show</p> }
+            <ol>
+                { user.options.map(option => (<li key={option}>{ option }</li>)) }
+            </ol>
+            <div>
+                <form onSubmit={onFormSubmit}>
+                    <label htmlFor="itemForm">Add new item</label>
+                    <input id="itemForm" name="option" type="text"/>
+                    <button>ADD</button>
+                </form>
+                
             </div>
-
-            <div style={style}>
-                <h1>Counter mini-app</h1>
-                <p>Events and Attributes</p>
-                <p>Counter: { counter }</p>
-                <button style={buttonStyleAdd} onClick={addOne}>Add 1</button>
-                <button style={buttonStyleMinus} onClick={minusOne}>Minus 1</button>
-                <button style={buttonStyleRestart} onClick={reset}>Reset</button>
-            </div>
+            { getLocation(user) }
         </div>
     )
 

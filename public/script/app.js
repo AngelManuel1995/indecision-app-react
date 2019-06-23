@@ -3,7 +3,8 @@
 var user = {
     name: 'Angel Manuel Góez Giraldo',
     age: 24,
-    location: 'Medellín - Colombia'
+    location: 'Medellín - Colombia',
+    options: ['item1', 'item2']
 };
 
 var getLocation = function getLocation(_ref) {
@@ -29,43 +30,25 @@ var style = {
     display: 'inline-block',
     margin: '0px'
 };
-var buttonStyleAdd = {
-    backgroundColor: 'green',
-    color: '#fff',
-    padding: '5px',
-    fontSize: '20px',
-    boxShadow: '1px 2px #ccc',
-    margin: '2px'
-};
-var buttonStyleMinus = {
-    backgroundColor: 'crimson',
-    color: '#fff',
-    padding: '5px',
-    fontSize: '20px',
-    boxShadow: '1px 2px #ccc',
-    margin: '2px'
-};
-var buttonStyleRestart = {
-    backgroundColor: 'blue',
-    color: '#fff',
-    padding: '5px',
-    fontSize: '20px',
-    boxShadow: '1px 2px #ccc',
-    margin: '2px'
+
+var onFormSubmit = function onFormSubmit(e) {
+    e.preventDefault();
+    var option = e.target.elements.option.value;
+    if (option) {
+        user.options.push(option);
+        e.target.elements.option.value = '';
+        render();
+    }
 };
 
-var counter = 0;
+var onMakeDecision = function onMakeDecision() {
+    var decision = Math.floor(Math.random() * user.options.length);
+    var todo = user.options[decision];
+    console.log(todo);
+};
 
-var addOne = function addOne() {
-    counter++;
-    render();
-};
-var minusOne = function minusOne() {
-    counter--;
-    render();
-};
-var reset = function reset() {
-    counter = 0;
+var removeAllItems = function removeAllItems() {
+    user.options = [];
     render();
 };
 
@@ -73,71 +56,68 @@ var render = function render() {
 
     var template = React.createElement(
         'div',
-        null,
+        { style: style },
         React.createElement(
-            'div',
-            { style: style },
-            React.createElement(
-                'h1',
-                null,
-                'Indecision app'
-            ),
-            React.createElement(
-                'p',
-                null,
-                'Hi I am basic template, and I changed'
-            ),
-            React.createElement(
-                'ol',
-                null,
-                React.createElement(
+            'h1',
+            null,
+            'Indecision app'
+        ),
+        React.createElement(
+            'p',
+            null,
+            'Hi I am basic template, and I changed'
+        ),
+        React.createElement(
+            'button',
+            { disabled: user.options.length === 0, onClick: onMakeDecision },
+            'WHAT SHOULD I DO?'
+        ),
+        React.createElement(
+            'button',
+            { onClick: removeAllItems },
+            'REMOVE ALL'
+        ),
+        user.options.length > 0 ? React.createElement(
+            'p',
+            null,
+            'Here are your options: ',
+            user.options.length
+        ) : React.createElement(
+            'p',
+            null,
+            'No options to show'
+        ),
+        React.createElement(
+            'ol',
+            null,
+            user.options.map(function (option) {
+                return React.createElement(
                     'li',
-                    null,
-                    'Item one'
-                ),
-                React.createElement(
-                    'li',
-                    null,
-                    'Item two'
-                )
-            ),
-            getLocation(user)
+                    { key: option },
+                    option
+                );
+            })
         ),
         React.createElement(
             'div',
-            { style: style },
+            null,
             React.createElement(
-                'h1',
-                null,
-                'Counter mini-app'
-            ),
-            React.createElement(
-                'p',
-                null,
-                'Events and Attributes'
-            ),
-            React.createElement(
-                'p',
-                null,
-                'Counter: ',
-                counter
-            ),
-            React.createElement(
-                'button',
-                { style: buttonStyleAdd, onClick: addOne },
-                'Add 1'
-            ),
-            React.createElement(
-                'button',
-                { style: buttonStyleMinus, onClick: minusOne },
-                'Minus 1'
-            ),
-            React.createElement(
-                'button',
-                { style: buttonStyleRestart, onClick: reset },
-                'Reset'
+                'form',
+                { onSubmit: onFormSubmit },
+                React.createElement(
+                    'label',
+                    { htmlFor: 'itemForm' },
+                    'Add new item'
+                ),
+                React.createElement('input', { id: 'itemForm', name: 'option', type: 'text' }),
+                React.createElement(
+                    'button',
+                    null,
+                    'ADD'
+                )
             )
-        )
+        ),
+        getLocation(user)
     );
 
     ReactDOM.render(template, document.getElementById('app'));
