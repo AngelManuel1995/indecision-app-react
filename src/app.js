@@ -1,12 +1,30 @@
 class IndecisionApp extends React.Component {
 
+    constructor(props){
+        super(props)
+        this.state = {
+            options: ['Item 1', 'Item 2', 'Item 3', 'Item 4', 'Item 5']
+        }
+        this.handleDeleteOptions = this.handleDeleteOptions.bind(this)
+    }
+
+    handleDeleteOptions(){
+        this.setState(() => {
+            return {
+                options:[]  
+            }
+        })
+    }
+
     render(){
-        const options = ['Item 1', 'Item 2', 'Item 3', 'Item 4', 'Item 5']
         return (
             <div>
                 <Header />
-                <Action />
-                <Options options={options} />
+                <Action hasOptions={this.state.options.length > 0}/>
+                <Options 
+                    handleDeleteOptions={this.handleDeleteOptions}
+                    options={this.state.options} 
+                />
                 <AddOption />
             </div>
         ) 
@@ -25,20 +43,40 @@ class Header extends React.Component {
 }
 
 class Action extends React.Component {
+
+    handlePick(){
+        console.log('Picking one')
+    }
+
     render(){
         return (
-            <button>What should I do?</button>
+            <div>
+                <button onClick={this.handlePick}
+                    disabled={!this.props.hasOptions}>
+                    What should I do?
+                </button>
+            </div>
         )
     }
 }
 
 class AddOption extends React.Component {
+
+    handleAddOption(e) {
+        e.preventDefault()
+        let option = e.target.elements.option.value.trim()
+
+        if(option){
+            alert('Option')
+        }
+    }
+
     render(){
         return (
             <div>
-                <form>
+                <form onSubmit={this.handleAddOption}>
                     <label htmlFor="addOption">Add new option</label>
-                    <input id="addOption" type="text"/>
+                    <input id="addOption" name="option" type="text"/>
                     <button>ADD</button>
                 </form>
             </div> 
@@ -50,7 +88,7 @@ class Option extends React.Component {
     render(){
         return (
             <div>
-                { this.props.options.map((option) => (<p key={ option }>{option}</p>)) }
+                { this.props.option }
             </div>
         )
     }
@@ -60,8 +98,11 @@ class Options extends React.Component {
     render(){
         return (
             <div>
+                <button onClick={this.props.handleDeleteOptions}>Remove all</button>
                 <h3>All your options: {this.props.options.length}</h3>
-                <Option {...this.props}/>
+                <div>
+                    { this.props.options.map((option) => (<Option key={option} option={option}/>)) }
+                </div>
             </div>
         )
     }
