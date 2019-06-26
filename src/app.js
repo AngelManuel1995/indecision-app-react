@@ -3,12 +3,37 @@ class IndecisionApp extends React.Component {
     constructor(props){
         super(props)
         this.state  = {
-            options : props.options
+            options : []
         }
         this.handleDeleteOptions = this.handleDeleteOptions.bind(this)
         this.handlePick = this.handlePick.bind(this)
         this.handleAddOption = this.handleAddOption.bind(this)
         this.handleDeleteOneOption = this.handleDeleteOneOption.bind(this)
+    }
+
+    componentDidMount(){
+        try {
+            const options = JSON.parse(localStorage.getItem('options'))
+            if(options){
+                this.setState(() => ({ options }))
+            }
+
+        } catch (e) {
+            this.state.options = []
+        }
+    }
+
+    componentDidUpdate(prevProps, prevState){
+        if(prevState.options.length !== this.state.options.length){
+            const optionsJson = JSON.stringify(this.state.options)
+            localStorage.setItem('options', optionsJson)
+        }
+        console.log('Component did update')
+    }
+
+    componentWillUnmount(){
+        console.log('Component will Unmount')
+        return true
     }
 
     handleDeleteOptions(){
@@ -19,7 +44,7 @@ class IndecisionApp extends React.Component {
         })
     }
     handleDeleteOneOption(optionToRemove){
-        this.setState((prevState) => ({ options: prevState.options.filter(((option) => option !== optionToRemove)) }) )
+        this.setState((prevState) => ({ options: prevState.options.filter(((option) => option !== optionToRemove))}))
     }
 
     handlePick(){
@@ -135,7 +160,8 @@ const Option = (props) => (
 const Options = (props) => (
     <div>
         <button onClick={props.handleDeleteOptions}>Remove all</button>
-        <h3>All your options: {props.options.length}</h3>
+
+        {(props.options.length === 0 ) ? <p>Please add one option to get started!!!</p>: <h3>All your options: {props.options.length}</h3>}
         <div>
             { props.options.map((option) => (<Option handleDeleteOneOption={props.handleDeleteOneOption} props key={option} option={option}/>)) }
         </div>
@@ -143,8 +169,8 @@ const Options = (props) => (
 )
 
 
-IndecisionApp.defaultProps = {
+/*IndecisionApp.defaultProps = {
     options: ['Item 1', 'Item 2', 'Item 3', 'Item 4', 'Item 5', 'Item 6']
-}
+}*/
 
 ReactDOM.render(<IndecisionApp />, document.getElementById('app'))

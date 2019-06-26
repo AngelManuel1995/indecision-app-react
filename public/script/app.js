@@ -19,7 +19,7 @@ var IndecisionApp = function (_React$Component) {
         var _this = _possibleConstructorReturn(this, (IndecisionApp.__proto__ || Object.getPrototypeOf(IndecisionApp)).call(this, props));
 
         _this.state = {
-            options: props.options
+            options: []
         };
         _this.handleDeleteOptions = _this.handleDeleteOptions.bind(_this);
         _this.handlePick = _this.handlePick.bind(_this);
@@ -29,6 +29,35 @@ var IndecisionApp = function (_React$Component) {
     }
 
     _createClass(IndecisionApp, [{
+        key: 'componentDidMount',
+        value: function componentDidMount() {
+            try {
+                var options = JSON.parse(localStorage.getItem('options'));
+                if (options) {
+                    this.setState(function () {
+                        return { options: options };
+                    });
+                }
+            } catch (e) {
+                this.state.options = [];
+            }
+        }
+    }, {
+        key: 'componentDidUpdate',
+        value: function componentDidUpdate(prevProps, prevState) {
+            if (prevState.options.length !== this.state.options.length) {
+                var optionsJson = JSON.stringify(this.state.options);
+                localStorage.setItem('options', optionsJson);
+            }
+            console.log('Component did update');
+        }
+    }, {
+        key: 'componentWillUnmount',
+        value: function componentWillUnmount() {
+            console.log('Component will Unmount');
+            return true;
+        }
+    }, {
         key: 'handleDeleteOptions',
         value: function handleDeleteOptions() {
             this.setState(function () {
@@ -212,7 +241,11 @@ var Options = function Options(props) {
             { onClick: props.handleDeleteOptions },
             'Remove all'
         ),
-        React.createElement(
+        props.options.length === 0 ? React.createElement(
+            'p',
+            null,
+            'Please add one option to get started!!!'
+        ) : React.createElement(
             'h3',
             null,
             'All your options: ',
@@ -228,8 +261,8 @@ var Options = function Options(props) {
     );
 };
 
-IndecisionApp.defaultProps = {
+/*IndecisionApp.defaultProps = {
     options: ['Item 1', 'Item 2', 'Item 3', 'Item 4', 'Item 5', 'Item 6']
-};
+}*/
 
 ReactDOM.render(React.createElement(IndecisionApp, null), document.getElementById('app'));
